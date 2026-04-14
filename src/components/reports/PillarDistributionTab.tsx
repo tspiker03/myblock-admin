@@ -132,6 +132,21 @@ function pillarTotal(row: StudentPillarRow) {
   return PILLARS.reduce((s, p) => s + row[p], 0)
 }
 
+function ColHeader({ col, label, sortKey, onToggle }: { col: SortKey; label: string; sortKey: SortKey; onToggle: (col: SortKey) => void }) {
+  const active = sortKey === col
+  return (
+    <th
+      className="px-3 py-2 text-left text-xs font-semibold text-gray-500 cursor-pointer hover:text-gray-700 select-none whitespace-nowrap"
+      onClick={() => onToggle(col)}
+    >
+      <span className="flex items-center gap-1">
+        {label}
+        <ArrowUpDown size={11} className={active ? 'text-[#1A3A7D]' : 'text-gray-300'} />
+      </span>
+    </th>
+  )
+}
+
 function ByStudentTable({ data }: { data: StudentPillarRow[] }) {
   const [sortKey, setSortKey] = useState<SortKey>('total')
   const [asc, setAsc] = useState(false)
@@ -142,26 +157,11 @@ function ByStudentTable({ data }: { data: StudentPillarRow[] }) {
   }
 
   const sorted = [...data].sort((a, b) => {
-    let av: number | string = sortKey === 'username' ? a.username : sortKey === 'total' ? pillarTotal(a) : a[sortKey as Pillar]
-    let bv: number | string = sortKey === 'username' ? b.username : sortKey === 'total' ? pillarTotal(b) : b[sortKey as Pillar]
+    const av: number | string = sortKey === 'username' ? a.username : sortKey === 'total' ? pillarTotal(a) : a[sortKey as Pillar]
+    const bv: number | string = sortKey === 'username' ? b.username : sortKey === 'total' ? pillarTotal(b) : b[sortKey as Pillar]
     if (typeof av === 'string') return asc ? av.localeCompare(bv as string) : (bv as string).localeCompare(av)
     return asc ? (av as number) - (bv as number) : (bv as number) - (av as number)
   })
-
-  function ColHeader({ col, label }: { col: SortKey; label: string }) {
-    const active = sortKey === col
-    return (
-      <th
-        className="px-3 py-2 text-left text-xs font-semibold text-gray-500 cursor-pointer hover:text-gray-700 select-none whitespace-nowrap"
-        onClick={() => toggleSort(col)}
-      >
-        <span className="flex items-center gap-1">
-          {label}
-          <ArrowUpDown size={11} className={active ? 'text-[#1A3A7D]' : 'text-gray-300'} />
-        </span>
-      </th>
-    )
-  }
 
   if (data.length === 0) {
     return (
@@ -180,9 +180,9 @@ function ByStudentTable({ data }: { data: StudentPillarRow[] }) {
         <table className="w-full text-sm">
           <thead className="bg-gray-50 border-b border-gray-100">
             <tr>
-              <ColHeader col="username" label="Student" />
-              {PILLARS.map((p) => <ColHeader key={p} col={p} label={PILLAR_LABELS[p]} />)}
-              <ColHeader col="total" label="Total" />
+              <ColHeader col="username" label="Student" sortKey={sortKey} onToggle={toggleSort} />
+              {PILLARS.map((p) => <ColHeader key={p} col={p} label={PILLAR_LABELS[p]} sortKey={sortKey} onToggle={toggleSort} />)}
+              <ColHeader col="total" label="Total" sortKey={sortKey} onToggle={toggleSort} />
             </tr>
           </thead>
           <tbody>

@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { createContext, useContext, useState, type ReactNode } from 'react'
 import axios from 'axios'
 import { clearTokens, getToken, setTokens } from '../api/client'
 
@@ -20,21 +20,14 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue | null>(null)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<AuthUser | null>(null)
   const [token, setToken] = useState<string | null>(getToken)
-
-  // On mount, restore user from localStorage if token exists
-  useEffect(() => {
+  const [user, setUser] = useState<AuthUser | null>(() => {
     const stored = localStorage.getItem('myblock_user')
-    if (stored && token) {
-      try {
-        setUser(JSON.parse(stored))
-      } catch {
-        clearTokens()
-        setToken(null)
-      }
+    if (stored && getToken()) {
+      try { return JSON.parse(stored) } catch { return null }
     }
-  }, [])
+    return null
+  })
 
   async function login(username: string, password: string) {
     const { data } = await axios.post('/api/v1/auth/login', { username, password })
@@ -61,6 +54,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   )
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useAuth() {
   const ctx = useContext(AuthContext)
   if (!ctx) throw new Error('useAuth must be used inside AuthProvider')
