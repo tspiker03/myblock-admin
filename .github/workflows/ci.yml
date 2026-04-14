@@ -122,7 +122,7 @@ jobs:
 
             docker pull "${IMAGE}"
             cd /opt/myblock
-            IMAGE_ADMIN="${IMAGE}" docker compose -f docker-compose.dev.yml up -d --no-deps admin
+            IMAGE_ADMIN="${IMAGE}" IMAGE_API="${IMAGE_API:-nginx:alpine}" docker compose --env-file .env -f docker-compose.dev.yml up -d --no-deps admin
 
             for i in $(seq 1 6); do
               if curl -sf http://localhost:80/health; then
@@ -157,7 +157,7 @@ jobs:
 
             docker pull "${IMAGE}"
             cd /opt/myblock
-            IMAGE_ADMIN="${IMAGE}" docker compose -f docker-compose.dev.yml up -d --no-deps admin
+            IMAGE_ADMIN="${IMAGE}" IMAGE_API="${IMAGE_API:-nginx:alpine}" docker compose --env-file .env -f docker-compose.dev.yml up -d --no-deps admin
 
             for i in $(seq 1 6); do
               if curl -sf http://localhost:80/health; then
@@ -204,7 +204,7 @@ jobs:
 
             docker pull "${IMAGE}"
             cd /opt/myblock
-            IMAGE_ADMIN="${IMAGE}" docker compose -f docker-compose.dev.yml up -d --no-deps admin
+            IMAGE_ADMIN="${IMAGE}" IMAGE_API="${IMAGE_API:-nginx:alpine}" docker compose --env-file .env -f docker-compose.dev.yml up -d --no-deps admin
 
             for i in $(seq 1 12); do
               if curl -sf http://localhost:80/health; then
