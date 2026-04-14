@@ -1,4 +1,4 @@
-import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios'
+import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios'
 
 const TOKEN_KEY = 'myblock_token'
 const REFRESH_TOKEN_KEY = 'myblock_refresh_token'

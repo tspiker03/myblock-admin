@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, type CSSProperties } from 'react'
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell,
 } from 'recharts'
@@ -43,8 +43,8 @@ function defaultRange() {
 
 // ── Skeleton ──────────────────────────────────────────────────────────────────
 
-function Skeleton({ className }: { className?: string }) {
-  return <div className={`bg-gray-200 rounded animate-pulse ${className ?? ''}`} />
+function Skeleton({ className, style }: { className?: string; style?: CSSProperties }) {
+  return <div className={`bg-gray-200 rounded animate-pulse ${className ?? ''}`} style={style} />
 }
 
 function ChartSkeleton() {

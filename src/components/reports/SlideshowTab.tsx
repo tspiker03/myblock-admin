@@ -150,9 +150,7 @@ function SlideCard({ slide, index, total, onMoveUp, onMoveDown, onRemove, onTitl
 
 let slideIdCounter = 0
 
-interface KeyedSlide extends Slide {
-  _key: string
-}
+type KeyedSlide = Slide & { _key: string }
 
 export function SlideshowTab() {
   const [slides, setSlides] = useState<KeyedSlide[]>([])
